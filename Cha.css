@@ -1,0 +1,64 @@
+* {
+    margin: 0%;
+    padding-left: 1%;
+    padding-right: 1%;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+body {
+    height: 50vh;
+    display: left;
+    justify-content: left;
+    align-content: space-around;
+    background: no-repeat;
+    background-size: cover;
+    background-image: url(imagens/240_F_597490918_dugDbSuqx6YSRmCaYiZJ6pCr37cXK3Rv.jpg);
+    color: black;
+}
+
+
+.txt-animado {
+    font-size: medium;
+    font-weight: 50;
+
+}
+.txt-animado span{
+    position: static;
+}
+.txt-animado span::before {
+    content: "";
+    color: black;
+    animation: palavras 1ms infinite;
+}
+@keyframes palavras {
+    0%,10%{
+        content: "[ㅤRㅤEㅤDAㅤCㅤTㅤEㅤDㅤ]";
+    }
+    
+    11%,15%{
+        content: "X⬛ㅤㅤㅤ⬛XXX⬛XㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤXX⬛*)¨(ㅤ&¨&XXㅤㅤㅤXXXX";
+    }
+    
+    16%,30%{
+        content: "QU⬛M E⬛U ㅤㅤㅤㅤㅤㅤS⬛*¨&(%*¨$¨&⬛";
+    }
+    
+    31%,40%{
+        content: "ㅤㅤㅤㅤㅤ⬛⬛ㅤㅤㅤ⬛⬛;$#ㅤㅤㅤㅤㅤ$⬛*(ㅤㅤ⬛)*_";
+    }
+
+    41%,57%{
+        content: "(ㅤㅤㅤEㅤㅤㅤRㅤㅤRㅤㅤㅤOㅤㅤㅤRㅤㅤㅤ)";
+    }
+    58%,60%{
+        content: "!!!!!!!!!!!!!ㅤㅤㅤㅤㅤ!!!!!!!!!⬛⬛⬛!!!!!!!!!!!!!!!!!!!!!!⬛!!!!!!!!!!!!!ㅤㅤㅤㅤㅤㅤㅤㅤ!⬛⬛⬛⬛!!!!!!!!!!!!!!!!!!!!!!!!!!!⬛⬛⬛!!!!!!!!!ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ!!!!!!!!!!!!!!!⬛!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!⬛⬛!!!!!!!!!!!!!!!!!ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ!!!!!!!!!!⬛⬛⬛!!!!!!!!!!!!!!!!!!!!";
+    }
+    61%,97%{
+        content: "⬛ㅤㅤ⬛ㅤ⬛";
+    }
+    98%,100%{
+        content: url();
+    }
+}
+
