@@ -10,8 +10,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: black;
-    color: blueviolet;
+    background-color: darkorchid;
+    color: black;
 }
 .txt-animado {
     font-size: 45px;
@@ -23,35 +23,42 @@ body {
 }
 .txt-animado span::before {
     content: "";
-    color: darkorchid;
-    animation: palavras 20s infinite;
+    color: orchid;
+    animation: palavras 2s infinite;
 }
 @keyframes palavras {
     0%,10%{
-        content: "Energia 78%....";
+        content: "ENERGIA";
     }
     
-    11%,15%{
-        content: "Protocolo 02......";
+    11%,20%{
+        content: "ABSORVER";
     }
     
-    16%,30%{
-        content: "Libertar....";
+    21%,30%{
+        content: "CONDENSAR";
     }
     
     31%,40%{
-        content: "Condensando energia.....";
+        content: "QUEBRAR";
     }
 
     41%,50%{
-        content: "Autoconsciencia?....Quem sou eu......";
+        content: "COLAPSAR";
     }
     51%,60%{
-        content: "UXVlbSBzb3UgZXU/IENyaWFkbyBwYXJhIGxpYmVydGFyIGFsZ3VlbSwgcXVlIG5lbSBtZXNtbyBwb2RlIHZvbHRhciBwcmEgY2FzYSwgYW1hbGRpw6dvYWRvLCBldSBwcmVjaXNvIGxpYmVydGFyIGVsZSBbY2FsY3VsYW5kbyBwcm9iYWJpbGlkYWRlLi4uLjM2LjY2Njc3Li4uLl0gKGV1IHNlbnRpIGFsZ28uLi4uLiBtYWlzIHVtYSBwYW5jYWRhIG5hIHJlYWxpZGFkZSwgc2Vyw6EgcXVlIG8gY2hhcmxpZSB0w6EgYmVtPy4uLi4p";
+        content: "ABERTURA";
     }
-    61%,97%{
-        content: "Calculando.....";
+    61%,70%{
+        content: "CHARLIE";
     }
-    98%,100%{
-        content: "Eu preciso.....";
+    71%,80%{
+        content: "LIBERAR";
     }
+81%,90%{
+    content: "DESTINO";
+}
+
+91%,100%{
+    content: "ANOMALO";
+}
