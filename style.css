@@ -10,7 +10,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: darkorchid;
+    background-color: black;
     color: black;
 }
 .txt-animado {
@@ -50,7 +50,7 @@ body {
         content: "ABERTURA";
     }
     61%,70%{
-        content: "CHARLIE";
+        content: "?#A##?E";
     }
     71%,80%{
         content: "LIBERAR";
