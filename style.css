@@ -24,7 +24,7 @@ body {
 .txt-animado span::before {
     content: "";
     color: orchid;
-    animation: palavras 2s infinite;
+    animation: palavras 1s infinite;
 }
 @keyframes palavras {
     0%,10%{
@@ -40,14 +40,14 @@ body {
     }
     
     31%,40%{
-        content: "QUEBRAR";
+        content: "INJUSTO";
     }
 
     41%,50%{
         content: "COLAPSAR";
     }
     51%,60%{
-        content: "ABERTURA";
+        content: "DESTINO?";
     }
     61%,70%{
         content: "?#A##?E";
@@ -56,7 +56,7 @@ body {
         content: "LIBERAR";
     }
 81%,90%{
-    content: "DESTINO";
+    content: "ABERTURA";
 }
 
 91%,100%{
