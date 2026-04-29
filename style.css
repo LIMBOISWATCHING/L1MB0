@@ -23,7 +23,7 @@ body {
 }
 .txt-animado span::before {
     content: "";
-    color: 188, 59, 235;
+    color: rgb(188, 59, 235);
     animation: palavras 0.5s infinite;
 }
 @keyframes palavras {
