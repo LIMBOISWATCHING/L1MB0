@@ -14,7 +14,7 @@ body {
     color: black;
 }
 .txt-animado {
-    font-size: 45px;
+    font-size: 46px;
     font-weight: 200;
 
 }
@@ -32,7 +32,7 @@ body {
     }
     
     11%,20%{
-        content: "ABSORVER";
+        content: "#BSOR#E#";
     }
     
     21%,30%{
@@ -44,7 +44,7 @@ body {
     }
 
     41%,50%{
-        content: "COLAPSAR";
+        content: "C#LA#SAR";
     }
     51%,60%{
         content: "DESTINO?";
@@ -53,7 +53,7 @@ body {
         content: "?#A##?E";
     }
     71%,80%{
-        content: "LIBERAR";
+        content: "LIB#R#R";
     }
 81%,90%{
     content: "ABERTURA";
