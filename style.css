@@ -24,7 +24,7 @@ body {
 .txt-animado span::before {
     content: "";
     color: orchid;
-    animation: palavras 1s infinite;
+    animation: palavras 0.5s infinite;
 }
 @keyframes palavras {
     0%,10%{
