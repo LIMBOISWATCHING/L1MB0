@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>L1MB0</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <div class="topo">
+
+    <div class="tituloArea">
+
+      <h1>C-L1mb0</h1>
+
+      <p id="online">
+        0 online
+      </p>
+
+    </div>
+
+    <div id="salaArea">
+
+      <input
+        type="text"
+        id="salaInput"
+        placeholder="#global"
+      >
+
+      <input
+        type="password"
+        id="senhaInput"
+        placeholder="senha"
+      >
+
+      <button id="saveBtn">
+        SAVE
+      </button>
+
+      <button id="clearBtn">
+        CLEAR
+      </button>
+
+    </div>
+
+  </div>
+
+  <div id="configBox">
+
+    <input
+      type="text"
+      id="nickInput"
+      placeholder="Seu nick"
+    >
+
+    <button id="entrar">
+      Entrar
+    </button>
+
+  </div>
+
+  <div id="chat"></div>
+
+  <div id="previewBox"></div>
+
+  <form id="form">
+
+    <input
+      type="text"
+      id="input"
+      placeholder="Mensagem ou /30 msg"
+      autocomplete="off"
+    >
+
+    <label for="imagem" id="imgBtn">
+      IMG
+    </label>
+
+    <input
+      type="file"
+      id="imagem"
+      accept="image/*"
+      hidden
+    >
+
+    <label for="audio" id="audioBtn">
+      AUD
+    </label>
+
+    <input
+      type="file"
+      id="audio"
+      accept="audio/*"
+      hidden
+    >
+
+    <button type="submit">>:]</button>
+
+  </form>
+
+  <div id="imageModal">
+
+    <img id="modalImg">
+
+  </div>
+
+  <script type="module" src="script.js"></script>
+
+</body>
+</html>
