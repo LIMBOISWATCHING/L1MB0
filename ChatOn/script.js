@@ -7,8 +7,8 @@ import {
   getDatabase,
   ref,
   push,
-  onChildAdded,
   set,
+  onChildAdded,
   onValue,
   remove,
   onDisconnect
@@ -40,21 +40,6 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const mensagensRef = ref(db, "mensagens");
-onValue(mensagensRef, (snapshot) => {
-
-  snapshot.forEach((msg) => {
-
-    const dados = msg.val();
-
-    if(Date.now() - dados.tempo > 900000){
-
-      remove(ref(db, "mensagens/" + msg.key));
-
-    }
-
-  });
-
-});
 
 const onlineRef = ref(db, "online");
 
@@ -76,11 +61,9 @@ const nomes = [
   "Void",
   "Luna",
   "Echo",
+  "Neko",
   "Shade",
-  "Zero",
-  "Chaos",
-  "Death",
-  "Justice"
+  "Zero"
 
 ];
 
@@ -106,8 +89,6 @@ entrar.onclick = () => {
 const userId =
   Math.random().toString(36).substring(2);
 
-set(ref(db, "online/" + userId), true);
-
 const userStatusRef =
   ref(db, "online/" + userId);
 
@@ -123,11 +104,15 @@ onValue(onlineRef, (snapshot) => {
 
 });
 
-function criarMensagem(dados){
+function criarMensagem(id, dados){
+
+  if(document.getElementById(id)) return;
 
   const div = document.createElement("div");
 
   div.classList.add("msg");
+
+  div.id = id;
 
   div.innerHTML = `
     <span class="nome">${dados.nome}:</span>
@@ -138,23 +123,52 @@ function criarMensagem(dados){
 
   chat.scrollTop = chat.scrollHeight;
 
+  const tempoRestante =
+    900000 - (Date.now() - dados.tempo);
+
+  if(tempoRestante <= 0){
+
+    remove(ref(db, "mensagens/" + id));
+
+    return;
+
+  }
+
   setTimeout(() => {
 
-  div.classList.add("sumindo");
+    div.classList.add("sumindo");
 
-}, 900000);
+  }, tempoRestante - 2000);
 
-setTimeout(() => {
+  setTimeout(() => {
 
-  div.remove();
+    remove(ref(db, "mensagens/" + id));
 
-}, 902000);
+  }, tempoRestante);
 
 }
 
 onChildAdded(mensagensRef, (snapshot) => {
 
-  criarMensagem(snapshot.val());
+  const dados = snapshot.val();
+
+  criarMensagem(snapshot.key, dados);
+
+});
+
+onValue(mensagensRef, (snapshot) => {
+
+  snapshot.forEach((msg) => {
+
+    const dados = msg.val();
+
+    if(Date.now() - dados.tempo > 900000){
+
+      remove(ref(db, "mensagens/" + msg.key));
+
+    }
+
+  });
 
 });
 
@@ -186,16 +200,4 @@ form.addEventListener("submit", (e) => {
 
   input.value = "";
 
-  setTimeout(() => {
-
-    remove(novaMensagem);
-
-  }, 900000);
-
 });
-
-setTimeout(() => {
-
-  remove(novaMensagem);
-
-}, 900000);
