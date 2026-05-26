@@ -119,17 +119,17 @@ function criarMensagem(dados){
 
   chat.scrollTop = chat.scrollHeight;
 
-  setTimeout(() => {
+setTimeout(() => {
 
-    div.classList.add("sumindo");
+  div.classList.add("sumindo");
 
-  }, 500000);
+}, 900000);
 
-  setTimeout(() => {
+setTimeout(() => {
 
-    div.remove();
+  div.remove();
 
-  }, 520000);
+}, 902000);
 
 }
 
@@ -155,33 +155,27 @@ form.addEventListener("submit", (e) => {
 
   if(!texto) return;
 
-  push(mensagensRef, {
+const novaMensagem = push(mensagensRef);
 
-    nome,
-    texto,
-    tempo: Date.now()
+set(novaMensagem, {
+
+  nome,
+  texto,
+  tempo: Date.now()
+
+});
+
+setTimeout(() => {
+
+  remove(novaMensagem);
+
+}, 900000);
 
   });
 
   input.value = "";
 
 });
-
-setInterval(() => {
-
-  onValue(mensagensRef, (snapshot) => {
-
-    snapshot.forEach((msg) => {
-
-      const dados = msg.val();
-
-      if(Date.now() - dados.tempo > 600000){
-
-        remove(ref(db, "mensagens/" + msg.key));
-
-      }
-
-    });
 
   });
 
