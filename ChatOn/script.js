@@ -40,6 +40,21 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const mensagensRef = ref(db, "mensagens");
+onValue(mensagensRef, (snapshot) => {
+
+  snapshot.forEach((msg) => {
+
+    const dados = msg.val();
+
+    if(Date.now() - dados.tempo > 900000){
+
+      remove(ref(db, "mensagens/" + msg.key));
+
+    }
+
+  });
+
+});
 
 const onlineRef = ref(db, "online");
 
