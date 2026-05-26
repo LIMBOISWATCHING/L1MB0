@@ -175,7 +175,7 @@ setInterval(() => {
 
       const dados = msg.val();
 
-      if(Date.now() - dados.tempo > 60000){
+      if(Date.now() - dados.tempo > 600000){
 
         remove(ref(db, "mensagens/" + msg.key));
 
