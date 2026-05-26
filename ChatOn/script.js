@@ -10,7 +10,8 @@ import {
   onChildAdded,
   set,
   onValue,
-  remove
+  remove,
+  onDisconnect
 
 }
 
@@ -60,9 +61,11 @@ const nomes = [
   "Void",
   "Luna",
   "Echo",
-  "Neko",
   "Shade",
-  "Zero"
+  "Zero",
+  "Chaos",
+  "Death",
+  "Justice"
 
 ];
 
@@ -90,11 +93,12 @@ const userId =
 
 set(ref(db, "online/" + userId), true);
 
-window.addEventListener("beforeunload", () => {
+const userStatusRef =
+  ref(db, "online/" + userId);
 
-  remove(ref(db, "online/" + userId));
+set(userStatusRef, true);
 
-});
+onDisconnect(userStatusRef).remove();
 
 onValue(onlineRef, (snapshot) => {
 
