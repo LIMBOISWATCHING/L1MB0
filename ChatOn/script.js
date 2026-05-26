@@ -123,13 +123,13 @@ function criarMensagem(dados){
 
     div.classList.add("sumindo");
 
-  }, 50000);
+  }, 500000);
 
   setTimeout(() => {
 
     div.remove();
 
-  }, 52000);
+  }, 520000);
 
 }
 
