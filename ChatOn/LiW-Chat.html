@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>L1MB0</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="usuarios.css"
+  >
+
+</head>
+
+<body>
+
+  <div class="topo">
+
+    <div class="tituloArea">
+
+      <h1>C-L1mb0</h1>
+
+      <p id="online">
+        0 online
+      </p>
+
+    </div>
+
+    <div id="salaArea">
+
+      <input
+        type="text"
+        id="salaInput"
+        placeholder="#global"
+      >
+
+      <input
+        type="password"
+        id="senhaInput"
+        placeholder="senha"
+      >
+
+      <button id="saveBtn">
+        SAVE
+      </button>
+
+      <button id="clearBtn">
+        CLEAR
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- LOGIN -->
+
+  <div id="login">
+
+    <div id="configBox">
+      
+
+      <input
+        type="text"
+        id="nickInput"
+        placeholder="Seu nick"
+        maxlength="20"
+        autocomplete="off"
+      >
+
+      <button id="entrar">
+        Entrar
+      </button>
+
+      <div id="nickHistorico"></div>
+
+    </div>
+
+  </div>
+
+  <!-- CHAT -->
+
+  <div id="chat"></div>
+
+  <!-- PREVIEW -->
+
+  <div id="previewBox"></div>
+
+  <!-- FORM -->
+
+  <form id="form">
+
+    <input
+      type="text"
+      id="input"
+      placeholder="Mensagem ou /30 msg"
+      autocomplete="off"
+    >
+
+    <!-- IMG -->
+
+    <label
+      for="imagem"
+      id="imgBtn"
+    >
+
+      IMG
+
+    </label>
+
+    <input
+      type="file"
+      id="imagem"
+      accept="image/*"
+      hidden
+    >
+
+    <!-- AUDIO -->
+
+    <label
+      for="audio"
+      id="audioBtn"
+    >
+
+      AUD
+
+    </label>
+
+    <input
+      type="file"
+      id="audio"
+      accept="audio/*"
+      hidden
+    >
+
+    <!-- ENVIAR -->
+
+    <button type="submit">
+      >:]
+    </button>
+
+  </form>
+
+  <!-- MODAL -->
+
+  <div id="imageModal">
+
+    <img id="modalImg">
+
+  </div>
+
+  <script
+    type="module"
+    src="script.js"
+  ></script>
+
+</body>
+</html>

@@ -1,0 +1,341 @@
+.nome{
+
+  display:inline-block;
+
+  width:120px;
+
+  min-width:120px;
+
+  max-width:120px;
+
+  overflow:hidden;
+
+  white-space:nowrap;
+
+}
+
+/* Limbo0911 */
+
+.limbo0911{
+
+  color:#fff;
+
+  animation:
+    limboGlitch .12s infinite;
+
+}
+
+/* Limbo1271 */
+
+.limbo1271{
+
+  animation:
+    blueFlash 2s infinite;
+
+}
+
+/* :]: */
+
+.roxo{
+
+  animation:
+    purpleGlow 4s infinite;
+
+}
+
+/* :3: */
+
+.chaos{
+
+  color:#777;
+
+}
+
+.chaosAtivo{
+
+  animation:
+    chaosFlash .08s infinite;
+
+}
+
+/* LimboIsHere */
+
+.limboVoid{
+
+  opacity:.7;
+
+  animation:
+    voidBlink 3s infinite;
+
+}
+
+@keyframes limboGlitch{
+
+  0%{
+    opacity:1;
+  }
+
+  50%{
+    opacity:.7;
+  }
+
+  100%{
+    opacity:1;
+  }
+
+}
+
+@keyframes blueFlash{
+
+  0%{
+
+    color:#8dcfff;
+
+    text-shadow:
+      0 0 4px #8dcfff;
+
+  }
+
+  50%{
+
+    color:#0051ff;
+
+    text-shadow:
+      0 0 16px #0051ff;
+
+  }
+
+  100%{
+
+    color:#8dcfff;
+
+    text-shadow:
+      0 0 4px #8dcfff;
+
+  }
+
+}
+
+.limbo1271{
+
+  animation:
+    blueFlash .08s infinite;
+
+}
+
+@keyframes purpleGlow{
+
+  0%{
+
+    color:#fff;
+
+  }
+
+  50%{
+
+    color:#d68fff;
+
+    text-shadow:
+      0 0 12px #b14fff;
+
+  }
+
+  100%{
+
+    color:#fff;
+
+  }
+
+}
+
+@keyframes chaosFlash{
+
+  0%{
+    color:#444;
+  }
+
+  25%{
+    color:magenta;
+  }
+
+  50%{
+    color:#111;
+  }
+
+  75%{
+    color:red;
+  }
+
+  100%{
+    color:#000;
+  }
+
+}
+
+@keyframes voidBlink{
+
+  0%{
+    opacity:.7;
+  }
+
+  50%{
+    opacity:.2;
+  }
+
+  100%{
+    opacity:.7;
+  }
+
+}
+
+.textoMsg{
+
+  margin-top:4px;
+
+  word-break:break-word;
+
+}
+
+.imgMsg{
+
+  margin-top:8px;
+
+  max-width:260px;
+
+  border-radius:14px;
+
+  cursor:pointer;
+
+}
+
+.globalGlitch{
+
+  animation:
+    globalGlitch 1s;
+
+}
+
+@keyframes globalGlitch{
+
+  0%{
+
+    background:#fff;
+
+    filter:invert(1);
+
+  }
+
+  20%{
+
+    opacity:.1;
+
+  }
+
+  40%{
+
+    transform:translateX(5px);
+
+  }
+
+  60%{
+
+    filter:blur(3px);
+
+  }
+
+  100%{
+
+    background:#000;
+
+    filter:none;
+
+  }
+
+}
+
+#nickHistorico{
+
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+
+  margin-top:10px;
+
+}
+
+.nickSalvo{
+
+  background:#111;
+  border:1px solid #333;
+
+  color:white;
+
+  padding:4px 8px;
+
+  border-radius:8px;
+
+  cursor:pointer;
+
+  transition:0.2s;
+
+}
+
+.nickSalvo:hover{
+
+  background:#222;
+
+  transform:scale(1.05);
+
+}
+.nickBox{
+
+  position:relative;
+
+  display:flex;
+  align-items:center;
+
+}
+
+.apagarNick{
+
+  position:absolute;
+
+  top:-5px;
+  right:-5px;
+
+  width:16px;
+  height:16px;
+
+  border-radius:50%;
+
+  background:#300;
+
+  color:white;
+
+  font-size:11px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  opacity:0;
+
+  transition:0.2s;
+
+}
+
+.nickBox:hover .apagarNick{
+
+  opacity:1;
+
+}
+
+.apagarNick:hover{
+
+  transform:scale(1.2);
+
+  background:#700;
+
+}

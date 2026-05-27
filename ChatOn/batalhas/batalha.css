@@ -1,0 +1,411 @@
+body{
+
+  margin:0;
+  overflow:hidden;
+
+  background:black;
+
+  color:white;
+
+  font-family:monospace;
+
+}
+
+/* OVERLAY */
+
+#battleOverlay{
+
+  position:fixed;
+
+  inset:0;
+
+  pointer-events:none;
+
+  opacity:0.03;
+
+  background-image:
+
+    repeating-radial-gradient(
+
+      circle at center,
+
+      white 0px,
+
+      transparent 1px,
+
+      transparent 4px
+
+    );
+
+}
+
+/* TELA */
+
+#battleScreen{
+
+  width:100vw;
+  height:100vh;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+  justify-content:center;
+
+  gap:18px;
+
+}
+
+/* SPRITE */
+
+#enemyImage{
+
+  width:240px;
+  height:240px;
+
+  object-fit:contain;
+
+  image-rendering:pixelated;
+
+  filter:
+
+    drop-shadow(
+      0 0 15px white
+    );
+
+  animation:
+
+    flutuar 3s ease-in-out infinite;
+
+}
+
+@keyframes flutuar{
+
+  0%{
+
+    transform:
+      translateY(0px);
+
+  }
+
+  50%{
+
+    transform:
+      translateY(-6px);
+
+  }
+
+  100%{
+
+    transform:
+      translateY(0px);
+
+  }
+
+}
+
+/* NOME */
+
+#enemyName{
+
+  letter-spacing:4px;
+
+  text-shadow:
+
+    0 0 10px white;
+
+}
+
+/* HP */
+
+#hpBox{
+
+  width:320px;
+  height:18px;
+
+  border:
+
+    1px solid #888;
+
+  overflow:hidden;
+
+  background:#111;
+
+}
+
+#hpFill{
+
+  width:100%;
+  height:100%;
+
+  background:white;
+
+  transition:0.3s;
+
+}
+
+/* TEXTO */
+
+#battleText{
+
+  width:500px;
+
+  min-height:60px;
+
+  padding:12px;
+
+  border:
+
+    1px solid #444;
+
+  background:
+
+    rgba(255,255,255,0.03);
+
+  box-shadow:
+
+    0 0 12px rgba(255,255,255,0.06);
+
+  text-align:center;
+
+  line-height:1.6;
+
+  animation:
+
+    textoGlow 4s infinite;
+
+}
+
+@keyframes textoGlow{
+
+  0%{
+
+    opacity:0.8;
+
+  }
+
+  50%{
+
+    opacity:1;
+
+  }
+
+  100%{
+
+    opacity:0.8;
+
+  }
+
+}
+
+/* ESCOLHAS */
+
+#choices{
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  justify-content:center;
+
+  gap:12px;
+
+  width:600px;
+
+}
+
+.choiceBtn{
+
+  min-width:160px;
+
+  padding:10px;
+
+  background:#0a0a0a;
+
+  border:
+
+    1px solid #444;
+
+  color:white;
+
+  cursor:pointer;
+
+  transition:0.2s;
+
+  font-family:monospace;
+
+  letter-spacing:2px;
+
+}
+
+.choiceBtn:hover{
+
+  transform:scale(1.05);
+
+  border-color:white;
+
+  box-shadow:
+
+    0 0 12px rgba(255,255,255,0.2);
+
+}
+
+/* GLITCH */
+
+.battleGlitch{
+
+  animation:
+    battleFlash 0.08s infinite;
+
+}
+
+@keyframes battleFlash{
+
+  0%{
+
+    filter:
+      brightness(1);
+
+  }
+
+  50%{
+
+    filter:
+      brightness(2)
+      contrast(2);
+
+  }
+
+  100%{
+
+    filter:
+      brightness(1);
+
+  }
+
+}
+
+.textoBugado{
+
+  letter-spacing:5px;
+
+  transform:
+    skewX(8deg);
+
+}
+
+/* ATAQUES */
+
+#attackArea{
+
+  width:700px;
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap:12px;
+
+  margin-top:10px;
+
+}
+
+.attackBtn{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  background:#0b0b0b;
+
+  border:
+    1px solid #333;
+
+  padding:10px;
+
+  cursor:pointer;
+
+  transition:0.2s;
+
+  min-height:70px;
+
+}
+
+.attackBtn:hover{
+
+  transform:scale(1.02);
+
+  border-color:white;
+
+  box-shadow:
+    0 0 12px rgba(255,255,255,0.15);
+
+}
+
+.attackBtn img{
+
+  width:42px;
+  height:42px;
+
+  object-fit:contain;
+
+  image-rendering:pixelated;
+
+  flex-shrink:0;
+
+}
+
+.attackInfo{
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:flex-start;
+
+}
+
+.attackNome{
+
+  font-size:14px;
+
+  letter-spacing:2px;
+
+}
+
+.attackDesc{
+
+  opacity:0.6;
+
+  font-size:12px;
+
+}
+
+#playerHPBox{
+
+  width:320px;
+  height:14px;
+
+  border:
+    1px solid #555;
+
+  background:#111;
+
+  overflow:hidden;
+
+}
+
+#playerHPFill{
+
+  width:100%;
+  height:100%;
+
+  background:#888;
+
+  transition:0.3s;
+
+}
