@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Análise Grafológica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .legenda {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-left: 5px solid #3498db;
+            border-radius: 4px;
+        }
+        .legenda ul {
+            margin: 5px 0 0 0;
+            padding-left: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .tag-p {
+            background-color: #2ecc71;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: inline-block;
+            margin: 2px;
+        }
+        .tag-n {
+            background-color: #e74c3c;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: inline-block;
+            margin: 2px;
+        }
+        @media screen and (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr {
+                border: 1px solid #ccc;
+                margin-bottom: 10px;
+                border-radius: 4px;
+                padding: 10px;
+            }
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+            }
+            td:before {
+                position: absolute;
+                top: 12px;
+                left: 15px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+            }
+            td:nth-of-type(1):before { content: "Tipo de Escrita"; }
+            td:nth-of-type(2):before { content: "Traços Comportamentais"; }
+            td:nth-of-type(3):before { content: "Códigos de Validação"; }
+            td:nth-of-type(4):before { content: "Interpretação do Bloco"; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Tabela de Análise Grafológica</h2>
+    
+    <div class="legenda">
+        <strong>Legenda de Vetores:</strong>
+        <ul>
+            <li><span class="tag-p">P</span> <strong>Vetor Positivo / Evolutivo:</strong> Representa traços que impulsionam o crescimento, maturidade, produtividade e bom relacionamento.</li>
+            <li><span class="tag-n">N</span> <strong>Vetor Negativo / Involutivo:</strong> Representa bloqueios, tensões internas, insegurança ou desvios de conduta.</li>
+        </ul>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tipo de Escrita</th>
+                <th>Traços Comportamentais Mapeados</th>
+                <th>Códigos de Validação</th>
+                <th>Interpretação do Bloco</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Disciplinada</strong><br><small>(letras e espaços estreitos)</small></td>
+                <td>Seriedade (0), Organização (2), Economia (4), Precisão (4), Disciplina (4), Perseverança (5)</td>
+                <td>
+                    <span class="tag-p">P2</span>
+                    <span class="tag-p">P6</span>
+                    <span class="tag-p">P7</span>
+                    <span class="tag-p">P12</span>
+                </td>
+                <td>Indica forte autocontrole, foco e rigor com regras. A estreiteza revela uma tendência à introversão, economia de recursos e foco em detalhes.</td>
+            </tr>
+            <tr>
+                <td><strong>Justaposto</strong></td>
+                <td>Constrangimento (9), Insegurança (9)</td>
+                <td>
+                    <span class="tag-n">N10</span>
+                    <span class="tag-n">N18</span>
+                </td>
+                <td>Letras desconectadas e isoladas. Sinaliza inibição, timidez, medo de errar e uma percepção travada diante das tarefas.</td>
+            </tr>
+            <tr>
+                <td><strong>Constante</strong></td>
+                <td>Disciplina (4), Perseverança (5)</td>
+                <td>
+                    <span class="tag-p">P9</span>
+                    <span class="tag-p">P21</span>
+                </td>
+                <td>Mostra estabilidade comportamental, firmeza de metas e fidelidade aos compromissos assumidos.</td>
+            </tr>
+            <tr>
+                <td><strong>Ligada Evoluída</strong></td>
+                <td>Seriedade (0), Concentração (1), Imparcialidade (1), Coesão (2)</td>
+                <td>
+                    <span class="tag-p">P5</span>
+                    <span class="tag-p">P7</span>
+                </td>
+                <td>Escrita fluida, em que as letras se emendam sem quebras. Revela alta capacidade lógica, raciocínio contínuo e facilidade de concentração.</td>
+            </tr>
+            <tr>
+                <td><strong>Robusta</strong></td>
+                <td>Segurança (0), Autoconfiança (2), Expansividade (3), Realização (3), Independência (5), Ambição (12)</td>
+                <td>
+                    <span class="tag-p">P4</span>
+                    <span class="tag-p">P9</span>
+                    <span class="tag-p">P10</span>
+                    <span class="tag-p">P14</span>
+                </td>
+                <td>Traço firme e estruturado. Aponta para forte energia vital, iniciativa pessoal, liderança e ambição focada em resultados.</td>
+            </tr>
+            <tr>
+                <td><strong>Retilínea</strong></td>
+                <td>Moderação (0), Autocontrole (0), Estabilidade (0), Equilíbrio (0), Clareza (1), Dedução (12)</td>
+                <td>
+                    <span class="tag-p">P6</span>
+                    <span class="tag-p">P20</span>
+                    <span class="tag-p">P24</span>
+                    <span class="tag-p">P26</span>
+                </td>
+                <td>Linhas que seguem uma reta perfeita. Traduz maturidade emocional, clareza de ideias, equilíbrio e previsibilidade de ações.</td>
+            </tr>
+            <tr>
+                <td><strong>Horizontal</strong></td>
+                <td>Autocontrole (0), Equilíbrio (0), Estabilidade (0), Concentração (1)</td>
+                <td>
+                    <span class="tag-p">P18</span>
+                    <span class="tag-p">P24</span>
+                </td>
+                <td>Reforça a firmeza e o controle sob pressão, indicando que a pessoa não se deixa desestabilizar facilmente.</td>
+            </tr>
+            <tr>
+                <td><strong>Perpendicular</strong></td>
+                <td>Moderação (0), Seriedade (0), Responsabilidade (0), Maturidade (1)</td>
+                <td>
+                    <span class="tag-p">P8</span>
+                    <span class="tag-p">P18</span>
+                </td>
+                <td>Letras em ângulo reto (verticais). Aponta predomínio da razão sobre a emoção, alta responsabilidade e conduta formal.</td>
+            </tr>
+            <tr>
+                <td><strong>Cursiva</strong></td>
+                <td>Sensatez (0)</td>
+                <td>
+                    <span class="tag-p">P8</span>
+                    <span class="tag-p">P20</span>
+                </td>
+                <td>Escrita natural e integrada. Mostra inteligência prática, adaptabilidade e bom senso no cotidiano.</td>
+            </tr>
+            <tr>
+                <td><strong>Redonda</strong></td>
+                <td>Temperança (0), Autocontrole (0), Conciliação (1), Elevação (11), Sensibilidade (11), Percepção (12)</td>
+                <td>
+                    <span class="tag-p">P8</span>
+                    <span class="tag-p">P18</span>
+                    <span class="tag-p">P20</span>
+                    <span class="tag-p">P23</span>
+                </td>
+                <td>Letras de formas predominantemente curvas. Indica diplomacia, capacidade de mediação, afabilidade e sensibilidade artística ou humana.</td>
+            </tr>
+            <tr>
+                <td><strong>Proporcionada</strong></td>
+                <td>Ética (0), Autodomínio (0), Estética (12), Análise (1), Síntese (2), Precisão (4)</td>
+                <td>
+                    <span class="tag-p">P2</span>
+                    <span class="tag-p">P6</span>
+                    <span class="tag-p">P15</span>
+                    <span class="tag-p">P20</span>
+                    <span class="tag-p">P21</span>
+                </td>
+                <td>Zonas da escrita (superior, média e inferior) em harmonia. Revela mente analítica, forte senso de justiça, equilíbrio psicológico e competência técnica.</td>
+            </tr>
