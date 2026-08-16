@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub Central de Análises Grafológicas</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; background-color: #f9f9f9; color: #333; }
+        .container { max-width: 600px; margin: 50px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 20px; }
+        p { color: #666; font-size: 0.95em; margin-bottom: 25px; }
+        .search-box { display: flex; gap: 10px; margin-bottom: 15px; }
+        input[type="text"] { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; outline: none; }
+        input[type="text"]:focus { border-color: #3498db; }
+        button { background-color: #2c3e50; color: white; border: none; padding: 12px 25px; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button:hover { background-color: #34495e; }
+        .error-message { color: #e74c3c; background-color: #fce4e4; border: 1px solid #fccdcd; padding: 10px; border-radius: 4px; font-size: 0.9em; font-weight: bold; display: none; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Hub de Consultas Grafológicas</h2>
+    <p>Digite o nome do avaliado para acessar o relatório correspondente (Ex: Hiro, João, Maria).</p>
+    
+    <div class="search-box">
+        <input type="text" id="nomeAnalise" placeholder="Digite o nome..." onkeypress="verificarTecla(event)">
+        <button onclick="buscarAnalise()">Acessar</button>
+    </div>
+
+    <div id="erro" class="error-message"></div>
+</div>
+
+<script>
+function buscarAnalise() {
+    const input = document.getElementById('nomeAnalise');
+    const erroDiv = document.getElementById('erro');
+    let nome = input.value.trim();
+
+    // Esconde o erro anterior
+    erroDiv.style.display = 'none';
+
+    if (nome === "") {
+        erroDiv.textContent = "Por favor, digite um nome válido.";
+        erroDiv.style.display = 'block';
+        return;
+    }
+
+    // Garante que a primeira letra do nome seja Maiúscula e o resto minúscula (Ex: hiRO vira Hiro)
+    // Isso evita erros comuns de digitação por conta do case-sensitive do GitHub
+    nome = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
+
+    // Monta o nome do arquivo exatamente no padrão: Analise Nome.html
+    const nomeArquivo = `Analise ${nome}.html`;
+
+    // No GitHub Pages, isso aqui funciona perfeitamente para validar a existência do arquivo
+    fetch(nomeArquivo, { method: 'HEAD' })
+    .then(response => {
+        if (response.ok) {
+            // Se o arquivo existir no repositório, redireciona
+            window.location.href = nomeArquivo;
+        } else {
+            // Se o arquivo não for encontrado (Erro 404 no GitHub)
+            erroDiv.textContent = `Erro: A análise para "${nome}" não foi encontrada no servidor.`;
+            erroDiv.style.display = 'block';
+        }
+    })
+    .catch(error => {
+        // Fallback caso você teste localmente antes de subir
+        window.location.href = nomeArquivo;
+    });
+}
+
+// Permite que o usuário aperte "Enter" no teclado para buscar
+function verificarTecla(event) {
+    if (event.key === "Enter") {
+        buscarAnalise();
+    }
+}
+</script>
+
+</body>
+</html>
