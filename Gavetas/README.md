@@ -37,3 +37,18 @@ O Realtime Database continua tendo limites e quotas. Em um arquivo pessoal peque
 
 ## Atualizações do site
 Alterar HTML/CSS/JS e publicar uma nova versão não exige refazer o Google Auth. O importante é continuar usando o mesmo projeto Firebase, a mesma configuração e manter os domínios autorizados.
+
+
+## v8 — mobile
+- Layout mobile edge-to-edge, sem moldura do gabinete.
+- Texto com melhor quebra e botões maiores.
+- Galeria mobile em coluna única para fotos realmente ocuparem a largura disponível.
+- Miniaturas de 480px são salvas junto das fotos para reduzir o custo de decodificação no celular; o zoom continua usando a foto original.
+
+## v9 — correção de fotos no mobile
+
+- Edição agora usa `update()` com atualizações por caminho, em vez de substituir a gaveta inteira com `set()`.
+- Fotos existentes são preservadas ao adicionar novas fotos.
+- Fotos removidas são apagadas apenas quando explicitamente marcadas.
+- Registros antigos com `photoData` são migrados sem perda da foto.
+- Galeria usa carregamento eager e fallback da miniatura para a imagem completa, melhorando compatibilidade em celulares.
