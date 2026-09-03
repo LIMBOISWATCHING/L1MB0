@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaveta</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">▣</span><div><h1>Gaveta</h1><p>guarde o que não quer perder</p></div></div>
+      <div class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="Pesquisar pelo título..." autocomplete="off"></div>
+      <div class="account"><span id="userEmail" class="user-email"></span><button id="loginBtn" class="secondary">Entrar</button><button id="logoutBtn" class="secondary hidden">Sair</button></div>
+      <button id="newItemBtn" class="drawer-button hidden">+ Nova gaveta</button>
+    </header>
+
+    <section class="cabinet">
+      <div class="cabinet-label"><span>ARQUIVO PESSOAL</span><span id="itemCount">0 itens</span></div>
+      <div id="loginNotice" class="login-notice">Entre com sua conta autorizada para acessar o arquivo.</div>
+      <div id="drawers" class="drawers"><div class="empty-state"><strong>Faça login para abrir as gavetas.</strong><span>O banco fica bloqueado para visitantes.</span></div></div>
+    </section>
+  </main>
+
+  <dialog id="itemDialog">
+    <form id="itemForm" class="form-card">
+      <div class="form-head"><div><small>ARQUIVO</small><h2 id="dialogTitle">Nova gaveta</h2></div><button type="button" id="closeDialog" class="icon-button">×</button></div>
+      <input type="hidden" id="itemId">
+      <label>Tipo de gaveta<select id="type"><option value="note">Anotação</option><option value="address">Endereço</option><option value="photo">Foto</option><option value="mixed">Misto</option></select></label>
+      <label>Título<input id="title" required maxlength="120" placeholder="Ex.: Casa da vó"></label>
+      <label>Endereço<input id="address" maxlength="300" placeholder="Rua, número, bairro..."></label>
+      <label>Texto / observações<textarea id="text" rows="6" placeholder="Escreva o que quiser guardar..."></textarea></label>
+      <label>Etiquetas<input id="tags" maxlength="250" placeholder="viagem, importante, ideias"></label>
+      <label>Foto <span class="hint">(reduzida automaticamente antes de salvar)</span><input id="photo" type="file" accept="image/*"></label>
+      <div id="photoStatus" class="photo-status"></div>
+      <div id="currentPhoto" class="current-photo hidden"></div>
+      <label id="removePhotoRow" class="favorite-row hidden"><input id="removePhoto" type="checkbox"> Remover a foto atual</label>
+      <label class="favorite-row"><input id="favorite" type="checkbox"> ★ Marcar como favorito</label>
+      <div class="form-actions"><button type="button" id="deleteBtn" class="danger hidden">Excluir</button><span></span><button type="button" id="cancelBtn" class="secondary">Cancelar</button><button type="submit" class="primary">Guardar</button></div>
+      <p id="formStatus" class="status"></p>
+    </form>
+  </dialog>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
