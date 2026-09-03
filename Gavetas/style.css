@@ -722,3 +722,159 @@ label input:focus, label textarea:focus, label select:focus { border-color: #5d7
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
 }
+
+/* v10 — contraste e legibilidade */
+:root {
+  --text-on-wood: #fff5e5;
+  --muted-on-wood: #e5d5bd;
+  --paper-text: #241d17;
+}
+.drawer-title { color: var(--text-on-wood); text-shadow: 0 1px 1px rgba(0,0,0,.45); }
+.drawer-meta { color: var(--muted-on-wood); text-shadow: 0 1px 1px rgba(0,0,0,.4); }
+.drawer-preview { color: #fff1dc; text-shadow: 0 1px 1px rgba(0,0,0,.35); line-height: 1.65; }
+.preview-address { color: #f3dfc2; }
+.empty-state { color: #f0dfc5; }
+.cabinet-label { color: #ead9c0; }
+.toolbar label { color: #ead9c0; }
+.open-drawer { color: #fff2dd; background: #281a12; font-weight: 700; }
+
+@media (max-width: 640px) {
+  /* No mobile, a madeira deixa de competir com o conteúdo. */
+  .cabinet {
+    margin-top: 0;
+    padding: 14px;
+    border: 0;
+    box-shadow: none;
+    background: #f2eadf;
+  }
+  .cabinet-label { color: #4b3a2b; padding: 8px 2px 12px; font-weight: 700; }
+  .toolbar { border-bottom: 1px solid #cdbfae; padding: 4px 0 14px; }
+  .toolbar label { color: #4b3a2b; font-weight: 700; }
+  .toolbar select { background: #fffaf2; border-color: #a99986; color: #211b16; }
+  .toolbar .filter-check { color: #3f3125; }
+  .drawers { gap: 10px; padding-top: 14px; }
+  .drawer {
+    padding: 0;
+    min-height: 0;
+    background: #6a472f;
+    border: 0;
+    box-shadow: 0 2px 7px rgba(40,25,12,.16);
+  }
+  .drawer-front {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    gap: 7px 10px;
+    padding: 15px;
+    border: 0;
+    background: linear-gradient(145deg,#704a30,#5d3d29);
+  }
+  .drawer-tab {
+    grid-row: 1 / 4;
+    width: 12px;
+    height: 44px;
+    align-self: start;
+    border: 0;
+    box-shadow: none;
+  }
+  .drawer-title {
+    grid-column: 2;
+    grid-row: 1;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    font-size: 19px;
+    line-height: 1.28;
+    color: #fff7ea;
+    text-shadow: 0 1px 2px rgba(0,0,0,.65);
+  }
+  .drawer-meta {
+    grid-column: 2;
+    grid-row: 2;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: anywhere;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #f1dec5;
+    text-shadow: 0 1px 2px rgba(0,0,0,.55);
+  }
+  .open-drawer {
+    grid-column: 2;
+    grid-row: 3;
+    width: 100%;
+    min-height: 46px;
+    padding: 9px 12px;
+    border: 1px solid rgba(255,242,221,.28);
+    background: #2a1b12;
+    color: #fff5e7;
+    font-size: 14px;
+  }
+  .drawer-preview {
+    padding: 16px 15px 18px;
+    border: 0;
+    background: #4b3020;
+    color: #fff4e3;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .preview-address { font-size: 14px; line-height: 1.55; color: #ffe7c9; }
+  .copy-address { overflow-wrap: anywhere; }
+  .preview-photo-grid { grid-template-columns: 1fr; gap: 12px; }
+  .preview-photo { padding: 5px; background: #f4eadc; border: 0; }
+  .preview-photo .preview-image {
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: auto;
+    object-fit: contain;
+    background: #ded1bf;
+    border: 0;
+  }
+  .preview-actions a, .preview-actions button { min-height: 42px; font-size: 13px; }
+  .empty-state { color: #4a3829; border-color: #b8a58d; line-height: 1.55; }
+  .empty-state span { color: #665342; }
+  .login-notice { line-height: 1.5; }
+
+  dialog {
+    width: 100vw;
+    max-width: 100vw;
+    max-height: 100dvh;
+    height: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+  }
+  .form-card { min-height: 100%; padding: max(18px, env(safe-area-inset-top)) 16px max(22px, env(safe-area-inset-bottom)); }
+  label { font-size: 14px; line-height: 1.4; }
+  label input, label textarea, label select { font-size: 16px; line-height: 1.45; }
+  .hint, .photo-status, .draft-notice, .status { line-height: 1.5; }
+  .form-actions { grid-template-columns: 1fr 1fr; }
+  .form-actions > span { display: none; }
+  .form-actions .danger { grid-column: 1 / -1; }
+  .form-actions .secondary, .form-actions .primary, .form-actions .danger { width: 100%; min-height: 48px; }
+
+  .photo-lightbox { padding: max(60px, env(safe-area-inset-top) + 48px) 8px max(18px, env(safe-area-inset-bottom)); }
+  .lightbox-content { max-height: calc(100dvh - 90px); }
+  #lightboxImage { max-width: 100%; max-height: calc(100dvh - 150px); }
+  .lightbox-nav { width: 42px; height: 50px; font-size: 36px; }
+  .lightbox-toolbar { max-width: 100%; flex-wrap: wrap; }
+
+  .toast { left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); max-width: none; line-height: 1.45; }
+}
+
+@media (max-width: 380px) {
+  .topbar { padding-left: 11px; padding-right: 11px; }
+  .cabinet { padding: 10px; }
+  .drawer-front { padding: 13px; }
+  .drawer-title { font-size: 18px; }
+  .drawer-preview { padding-left: 13px; padding-right: 13px; }
+}
