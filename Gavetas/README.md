@@ -1,50 +1,39 @@
-# Gaveta — Realtime Database + Base64 + login
+# Gaveta
 
-Esta versão não usa Firebase Storage. As fotos são redimensionadas e comprimidas no navegador e salvas como Base64 dentro do Firebase Realtime Database. Também existe botão para baixar a foto novamente.
+Site pessoal, 100% navegador, usando Firebase Authentication (Google) + Realtime Database. Não usa Firebase Storage.
 
-## O que você precisa fazer no Firebase
+## O que há nesta versão
+- Login Google.
+- Realtime Database com Security Rules.
+- Quantas fotos forem necessárias; não existe limite artificial de quantidade.
+- Fotos comprimidas no navegador antes de serem salvas.
+- Galeria, zoom em tela cheia, anterior/próxima e download individual.
+- Arrastar fotos para reordenar antes de salvar.
+- Área de arrastar e soltar para adicionar fotos.
+- Pesquisa por título, filtro por tipo, favoritos e ordenação.
+- Copiar endereço com um clique.
+- Rascunho dos campos de texto salvo localmente no navegador.
+- Aviso de alterações não salvas ao fechar a página.
+- Exportar/importar backup JSON.
+- Mensagens de erro mais claras, inclusive quando as Security Rules negam acesso.
 
-### 1. Ativar Authentication
-No Firebase Console:
-1. Abra o projeto `banco-de-dados-geral-l1mb0`.
-2. Vá em **Authentication → Sign-in method**.
-3. Ative **Google**.
-4. Em **Authentication → Settings → Authorized domains**, deixe o domínio onde o site será hospedado autorizado. Para testes locais, use um servidor local (por exemplo, a extensão Live Server do VS Code), em vez de abrir o HTML com `file://`.
+## Configuração do Firebase
+A configuração web já está em `app.js`. Ela pode ficar no navegador; a proteção real deve ser feita pelas Security Rules.
 
-### 2. Criar/usar as contas autorizadas
-O site usa login Google. Você pode usar duas contas, uma para cada pessoa que terá acesso. O arquivo `database.rules.json` está preparado para isso.
+### Authentication
+Firebase Console → Authentication → Sign-in method → Google: habilite o provedor.
 
-Abra `database.rules.json` e troque:
-- `SEU_EMAIL_1` pelo primeiro e-mail Google autorizado.
-- `SEU_EMAIL_2` pelo segundo e-mail Google autorizado.
+Em Authentication → Settings → Authorized domains, autorize os hosts usados pelo site, por exemplo `localhost`, `127.0.0.1` e o domínio do GitHub Pages quando publicar.
 
-Se quiser somente uma conta, repita o mesmo e-mail nos dois lugares.
+### Realtime Database
+Publique `database.rules.json` no Realtime Database e troque `SEU_EMAIL_1` e `SEU_EMAIL_2` pelos dois e-mails autorizados.
 
-### 3. Colocar as Security Rules
-No Firebase Console, abra **Realtime Database → Rules**, substitua as regras atuais pelas regras de `database.rules.json` (já com os e-mails trocados) e publique.
-
-As regras começam negando tudo e só liberam `/gaveta/items` para os dois e-mails autenticados e verificados. Não use `auth != null` sozinho se o banco contém dados privados compartilhados por vocês.
-
-### 4. Não precisa configurar Storage
-Esta versão não importa nem chama Firebase Storage. O campo `storageBucket` continua no objeto de configuração porque faz parte da configuração gerada pelo Firebase, mas o site não usa Storage.
+Se as regras continuarem com esses placeholders, login pode funcionar, mas leitura/escrita do banco será negada.
 
 ## Fotos
+Cada foto é redimensionada para no máximo 1400 px no maior lado e comprimida para aproximadamente 1,6 MB ou menos. A regra do banco também possui um limite defensivo por foto. Não há limite artificial de quantidade de fotos no código.
 
-- A imagem original não é enviada para o Firebase.
-- O navegador redimensiona a maior dimensão para no máximo 1400 px.
-- A imagem é convertida para JPEG e comprimida.
-- O alvo é aproximadamente até 1,6 MB por foto.
-- O resultado é salvo no campo `photoData` como Data URL/Base64.
-- O botão **Baixar foto** recria o arquivo a partir desse Data URL.
+O Realtime Database continua tendo limites e quotas. Em um arquivo pessoal pequeno isso costuma ser suficiente, mas uma quantidade muito grande de fotos pode aumentar o uso do banco e o tamanho dos backups.
 
-Isso economiza bastante espaço comparado a guardar fotos originais, mas Base64 ainda ocupa mais espaço que o arquivo binário. O Realtime Database no plano Spark possui 1 GB de armazenamento e 10 GB/mês de downloads; portanto, esta solução é indicada para um arquivo pessoal pequeno, não para uma galeria enorme.
-
-## Estrutura
-
-`gaveta/items/<id>`
-
-Cada item possui título, tipo, texto, endereço, tags, favorito, datas, usuário que atualizou e, quando houver, `photoData`.
-
-## Importante
-
-A `apiKey` do Firebase Web não é uma senha. A proteção real deste projeto vem do Firebase Authentication + Security Rules. Não coloque senhas ou tokens secretos no JavaScript.
+## Atualizações do site
+Alterar HTML/CSS/JS e publicar uma nova versão não exige refazer o Google Auth. O importante é continuar usando o mesmo projeto Firebase, a mesma configuração e manter os domínios autorizados.

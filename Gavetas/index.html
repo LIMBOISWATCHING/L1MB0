@@ -10,14 +10,14 @@
   <main class="app">
     <header class="topbar">
       <div class="brand"><span class="brand-mark">▣</span><div><h1>Gaveta</h1><p>guarde o que não quer perder</p></div></div>
-      <div class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="Pesquisar pelo título..." autocomplete="off"></div>
-      <div class="account"><span id="userEmail" class="user-email"></span><button id="loginBtn" class="secondary">Entrar</button><button id="logoutBtn" class="secondary hidden">Sair</button></div>
-      <button id="newItemBtn" class="drawer-button hidden">+ Nova gaveta</button>
+      <div class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="Pesquisar pelo título..." autocomplete="off"><button id="clearSearch" class="search-clear hidden" type="button" aria-label="Limpar pesquisa">×</button></div>
+      <div class="account"><span id="userEmail" class="user-email"></span><div class="account-actions"><button id="loginBtn" class="secondary">Entrar</button><button id="logoutBtn" class="secondary hidden">Sair</button><button id="exportBtn" class="secondary hidden" type="button">Exportar</button><button id="importBtn" class="secondary hidden" type="button">Importar</button><input id="importInput" class="hidden" type="file" accept="application/json"><button id="newItemBtn" class="drawer-button hidden">+ Nova gaveta</button></div></div>
     </header>
 
     <section class="cabinet">
       <div class="cabinet-label"><span>ARQUIVO PESSOAL</span><span id="itemCount">0 itens</span></div>
       <div id="loginNotice" class="login-notice">Entre com sua conta autorizada para acessar o arquivo.</div>
+      <div class="toolbar"><label>Tipo<select id="typeFilter"><option value="">Todos</option><option value="note">Anotação</option><option value="address">Endereço</option><option value="photo">Foto</option><option value="mixed">Misto</option></select></label><label>Ordenar<select id="sortSelect"><option value="created">Mais novas</option><option value="oldest">Mais antigas</option><option value="updated">Atualizadas</option><option value="title">Título A–Z</option></select></label><label class="filter-check"><input id="favoriteFilter" type="checkbox"> Só favoritos</label></div>
       <div id="drawers" class="drawers"><div class="empty-state"><strong>Faça login para abrir as gavetas.</strong><span>O banco fica bloqueado para visitantes.</span></div></div>
     </section>
   </main>
@@ -31,15 +31,27 @@
       <label>Endereço<input id="address" maxlength="300" placeholder="Rua, número, bairro..."></label>
       <label>Texto / observações<textarea id="text" rows="6" placeholder="Escreva o que quiser guardar..."></textarea></label>
       <label>Etiquetas<input id="tags" maxlength="250" placeholder="viagem, importante, ideias"></label>
-      <label>Foto <span class="hint">(reduzida automaticamente antes de salvar)</span><input id="photo" type="file" accept="image/*"></label>
+      <label>Fotos <span class="hint">(quantas quiser; reduzidas automaticamente antes de salvar)</span></label><div id="photoDrop" class="photo-drop"><input id="photo" type="file" accept="image/*" multiple><strong>Escolha fotos ou arraste-as para cá</strong><span>Você pode adicionar mais fotos em várias seleções.</span></div>
       <div id="photoStatus" class="photo-status"></div>
       <div id="currentPhoto" class="current-photo hidden"></div>
+      <div id="selectedPhotos" class="current-photo hidden"></div>
       <label id="removePhotoRow" class="favorite-row hidden"><input id="removePhoto" type="checkbox"> Remover a foto atual</label>
       <label class="favorite-row"><input id="favorite" type="checkbox"> ★ Marcar como favorito</label>
       <div class="form-actions"><button type="button" id="deleteBtn" class="danger hidden">Excluir</button><span></span><button type="button" id="cancelBtn" class="secondary">Cancelar</button><button type="submit" class="primary">Guardar</button></div>
-      <p id="formStatus" class="status"></p>
+      <p id="formStatus" class="status"></p><p id="draftNotice" class="draft-notice"></p>
     </form>
   </dialog>
+
+  <div id="photoLightbox" class="photo-lightbox hidden" aria-modal="true" role="dialog">
+    <button id="lightboxClose" class="lightbox-close" type="button" aria-label="Fechar">×</button>
+    <button id="lightboxPrev" class="lightbox-nav lightbox-prev" type="button" aria-label="Foto anterior">‹</button>
+    <div class="lightbox-content">
+      <img id="lightboxImage" alt="Foto ampliada">
+      <div class="lightbox-toolbar"><span id="lightboxCounter"></span><a id="lightboxDownload" class="secondary" download>Baixar foto</a></div>
+    </div>
+    <button id="lightboxNext" class="lightbox-nav lightbox-next" type="button" aria-label="Próxima foto">›</button>
+  </div>
   <script type="module" src="app.js"></script>
+<div id="toast" class="toast hidden" role="status"></div>
 </body>
 </html>
