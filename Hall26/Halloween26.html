@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curiosidades de Halloween</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #111;
+            color: #ddd;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #1c1c1c;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        /* Título transformado em botão interativo */
+        .titulo-interativo {
+            color: #ff7900;
+            font-size: 2rem;
+            border-bottom: 2px solid #ff7900;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.1s;
+            display: block;
+            text-align: left;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            width: 100%;
+            font-weight: bold;
+            font-family: inherit;
+        }
+
+        .titulo-interativo:hover {
+            color: #fff;
+            transform: scale(1.01);
+        }
+
+        /* Conteúdo que começa escondido */
+        #conteudo-artigo {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Tela do Jumpscare */
+        #jumpscare-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #jumpscare-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            animation: shake 0.1s infinite;
+        }
+
+        #halloween-text {
+            font-size: 6rem;
+            color: #ff2a00;
+            text-shadow: 5px 5px 15px #000, 0 0 30px #ff0000;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            z-index: 10000;
+            animation: pulse 0.15s infinite alternate;
+            text-align: center;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(3px, 2px) rotate(0deg); }
+            10% { transform: translate(-2px, -3px) rotate(-1deg); }
+            20% { transform: translate(-4px, 0px) rotate(1deg); }
+            30% { transform: translate(0px, 3px) rotate(0deg); }
+            40% { transform: translate(2px, -2px) rotate(1deg); }
+            50% { transform: translate(-2px, 3px) rotate(-1deg); }
+            60% { transform: translate(-4px, 2px) rotate(0deg); }
+            70% { transform: translate(3px, 2px) rotate(-1deg); }
+            80% { transform: translate(-2px, -2px) rotate(1deg); }
+            90% { transform: translate(3px, 3px) rotate(0deg); }
+            100% { transform: translate(2px, -3px) rotate(-1deg); }
+        }
+
+        @keyframes pulse {
+            from { transform: scale(0.95); }
+            to { transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- O clique aqui dispara tudo -->
+        <button class="titulo-interativo" onclick="revelarEIniciar()">▶ Cartinha para momor de halloween <3</button>
+        
+        <div id="conteudo-artigo">
+            <p>Essa é uma cartinha especial para você, meu amor!</p>
+            
+            <p>Pensei nela para fazer algo legal pra momor <3</p>
+            
+            <ul>
+                <li><strong>Sua rabeta:</strong> Como mor sabe, tenho falado muito da rabeta de mor, mas é pq ela é lindissima e maravilhosa. Então preciso mostrar meu amor!</li>
+                <li><strong>Cansaço:</strong> Tenho continuado cansado mesmo depois de dormir, provavelmente por dormir mal pra krl</li>
+                <li><strong>Surpresa:</strong> Essa carta foi feita para a surpresa do sustinho e não tem realmente muito conteudo, pq ficaria difícil de ler rabetin.</li>
+            </ul>
+
+            <p>Te amo muito minha fofana <3</p>
+        </div>
+    </div>
+
+    <!-- O Jumpscare Escondido -->
+    <div id="jumpscare-container">
+        <img id="jumpscare-img" src="jumpscare.jpg" alt="BOO!">
+        <h1 id="halloween-text">Feliz halloween!</h1>
+    </div>
+
+    <!-- Áudio do Grito -->
+    <audio id="scream-audio" src="grito.mp3" preload="auto"></audio>
+
+<script>
+    let ativado = false;
+
+    function revelarEIniciar() {
+        if (ativado) return;
+        ativado = true;
+
+        // Mostra o texto
+        document.getElementById('conteudo-artigo').style.display = 'block';
+        
+        // Muda o texto do título tirando o aviso de clique
+        document.querySelector('.titulo-interativo').textContent = '▼ Origem das Tradições de Halloween';
+
+        // Pré-ativa o som (exigência do navegador)
+        const som = document.getElementById('scream-audio');
+        som.play().then(() => {
+            som.pause();
+            som.currentTime = 0;
+        }).catch(e => console.log("Áudio preparado"));
+
+        // SOLUÇÃO DO DELAY: Toca o áudio aos 9,5 segundos para compensar o silêncio inicial
+        setTimeout(() => {
+            som.volume = 1.0;
+            som.play().catch(err => console.log("Erro ao tocar áudio:", err));
+        }, 9500); // 9.5 segundos
+
+        // Mostra a imagem do susto cravado nos 10 segundos
+        setTimeout(() => {
+            document.getElementById('jumpscare-container').style.display = 'flex';
+        }, 10000); // 10 segundos
+    }
+</script>
+
+</body>
+</html>
