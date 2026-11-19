@@ -954,3 +954,9 @@ label input:focus, label textarea:focus, label select:focus { border-color: #5d7
   .drawer-title { font-size: 17px; }
   .drawer-meta { font-size: 11px; }
 }
+
+/* Lista de fotos: cabeçalho e ação explícita de limpeza de duplicatas */
+.photo-list-heading { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin:0 0 10px; }
+.photo-list-heading small { margin:0; }
+.remove-duplicate-photos { min-height:38px; font-size:.88rem; }
+button:disabled { opacity:.65; cursor:wait; }
