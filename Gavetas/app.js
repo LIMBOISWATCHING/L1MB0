@@ -63,10 +63,7 @@ let unsubscribeItems = null;
 let lightboxPhotos = [];
 let lightboxIndex = 0;
 let pendingPhotos = [];
-let pendingFileKeys = new Set();
 let editingRemovedPhotoIds = new Set();
-let processingFiles = false;
-let saveInProgress = false;
 let toastTimer = null;
 let draftTimer = null;
 
@@ -76,9 +73,7 @@ function escapeHTML(value = "") {
 
 function normalizePhotos(item) {
   if (item?.photos && typeof item.photos === "object") {
-    // A chave do Realtime Database é a identidade real da foto. Nunca deixe
-    // um campo `id` interno sobrescrever essa chave (isso quebrava a remoção).
-    return Object.entries(item.photos).map(([id, photo]) => ({ ...(photo || {}), id }));
+    return Object.entries(item.photos).map(([id, photo]) => ({ id, ...photo }));
   }
   if (item?.photoData) return [{ id: "legacy", data: item.photoData, name: `${item.title || "foto"}.jpg` }];
   return [];
@@ -133,22 +128,12 @@ function updateLightbox() {
 
 function renderPhotoList(container, photos, item, label, editable = false, pending = false) {
   if (!photos.length) { container.classList.add("hidden"); container.innerHTML = ""; return; }
-  const duplicateIds = new Set();
-  if (editable) {
-    const seen = new Set();
-    for (const photo of photos) {
-      const signature = photo.data || photo.thumb;
-      if (!signature) continue;
-      if (seen.has(signature) && photo.id !== "legacy") duplicateIds.add(photo.id);
-      else seen.add(signature);
-    }
-  }
   container.classList.remove("hidden");
-  container.innerHTML = `${editable ? `<div class="photo-list-heading"><small>${escapeHTML(label)} (${photos.length})</small>${duplicateIds.size ? `<button type="button" class="secondary remove-duplicate-photos">Remover ${duplicateIds.size} duplicata(s)</button>` : ""}</div>` : `<small>${escapeHTML(label)}</small>`}<div class="photo-grid">${photos.map((photo, index) => `
+  container.innerHTML = `<small>${escapeHTML(label)}</small><div class="photo-grid">${photos.map((photo, index) => `
     <div class="photo-card" draggable="${pending ? "true" : "false"}" data-photo-id="${escapeHTML(photo.id || "")}">
-      <button type="button" class="photo-thumb" data-photo-index="${index}" aria-label="Ampliar foto ${index + 1}"><img src="${escapeHTML(photo.thumb || photo.data || "")}" data-full-src="${escapeHTML(photo.data || "")}" alt="Foto ${index + 1}" loading="lazy" decoding="async"><span class="zoom-hint">Ampliar</span></button>
+      <button type="button" class="photo-thumb" data-photo-index="${index}" aria-label="Ampliar foto ${index + 1}"><img src="${escapeHTML(photo.thumb || photo.data)}" data-full-src="${escapeHTML(photo.data)}" alt="Foto ${index + 1}" loading="lazy" decoding="async"><span class="zoom-hint">Ampliar</span></button>
       <div class="photo-card-actions">
-        <a class="secondary" href="${escapeHTML(photo.data || "#")}" download="${escapeHTML(photoDownloadName(item, photo, index + 1))}">Baixar</a>
+        <a class="secondary" href="${escapeHTML(photo.data)}" download="${escapeHTML(photoDownloadName(item, photo, index + 1))}">Baixar</a>
         ${editable && photo.id !== "legacy" ? `<button type="button" class="secondary remove-selected-photo" data-photo-id="${escapeHTML(photo.id)}">Remover</button>` : ""}
         ${pending ? `<span class="drag-hint">Arraste para reordenar</span>` : ""}
       </div>
@@ -158,25 +143,6 @@ function renderPhotoList(container, photos, item, label, editable = false, pendi
     if (full && img.src !== full) img.src = full;
   }, { once: true }));
   container.querySelectorAll(".photo-thumb").forEach(btn => btn.addEventListener("click", () => openLightbox(photos, Number(btn.dataset.photoIndex))));
-  if (editable) {
-    container.querySelectorAll(".remove-selected-photo").forEach(btn => btn.addEventListener("click", () => {
-      editingRemovedPhotoIds.add(btn.dataset.photoId);
-      const remaining = photos.filter(photo => !editingRemovedPhotoIds.has(photo.id));
-      renderPhotoList(container, remaining, item, remaining.length === 1 ? "Foto atual" : "Fotos atuais", true, false);
-      removePhotoRow.classList.toggle("hidden", remaining.length === 0);
-      showToast("Foto marcada para remoção. Ela será apagada ao guardar.");
-    }));
-    container.querySelector(".remove-duplicate-photos")?.addEventListener("click", () => {
-      const duplicates = [...duplicateIds];
-      if (!duplicates.length) return;
-      if (!confirm(`Foram encontradas ${duplicates.length} cópias repetidas. Manter uma cópia de cada imagem e marcar as demais para remoção?`)) return;
-      duplicates.forEach(id => editingRemovedPhotoIds.add(id));
-      const remaining = photos.filter(photo => !editingRemovedPhotoIds.has(photo.id));
-      renderPhotoList(container, remaining, item, remaining.length === 1 ? "Foto atual" : "Fotos atuais", true, false);
-      removePhotoRow.classList.toggle("hidden", remaining.length === 0);
-      showToast(`${duplicates.length} duplicata(s) marcada(s) para remoção. Guarde para confirmar.`);
-    });
-  }
   if (pending) wirePhotoDrag(container);
 }
 
@@ -204,7 +170,7 @@ function resetPhotoUI() {
   selectedPhotos.classList.add("hidden"); selectedPhotos.innerHTML = "";
   removePhotoRow.classList.add("hidden"); removePhoto.checked = false;
   photoStatus.textContent = ""; photoInput.value = "";
-  pendingPhotos = []; pendingFileKeys = new Set(); editingRemovedPhotoIds = new Set();
+  pendingPhotos = []; editingRemovedPhotoIds = new Set();
   photoDrop.classList.remove("drag-over");
 }
 
@@ -258,6 +224,17 @@ function openEdit(id) {
   renderPhotoList(currentPhoto, existingPhotos, item, existingPhotos.length === 1 ? "Foto atual" : "Fotos atuais", true, false);
   if (existingPhotos.length) removePhotoRow.classList.remove("hidden");
   dialog.showModal();
+}
+
+function wireCurrentPhotoButtons(id) {
+  currentPhoto.querySelectorAll(".remove-selected-photo").forEach(btn => btn.addEventListener("click", () => {
+    const item = items[id]; if (!item) return;
+    editingRemovedPhotoIds.add(btn.dataset.photoId);
+    const remaining = normalizePhotos(item).filter(photo => !editingRemovedPhotoIds.has(photo.id));
+    renderPhotoList(currentPhoto, remaining, item, remaining.length === 1 ? "Foto atual" : "Fotos atuais", true, false);
+    removePhotoRow.classList.toggle("hidden", remaining.length === 0);
+    showToast("Foto marcada para remoção. Ela será apagada ao guardar.");
+  }));
 }
 
 function getFilteredEntries() {
@@ -376,27 +353,10 @@ async function prepareFiles(files) {
 }
 
 async function handleFiles(files) {
-  if (processingFiles) { showToast("Aguarde o processamento das fotos terminar.", "error"); return; }
   const valid = files.filter(f => f.type.startsWith("image/"));
   if (!valid.length) { photoStatus.textContent = "Escolha arquivos de imagem."; return; }
-  const unique = [];
-  for (const file of valid) {
-    const key = `${file.name}|${file.size}|${file.lastModified}|${file.type}`;
-    if (pendingFileKeys.has(key)) continue;
-    pendingFileKeys.add(key);
-    unique.push(file);
-  }
-  if (!unique.length) { showToast("Essas fotos já foram adicionadas ao formulário."); return; }
-  processingFiles = true;
-  try {
-    await prepareFiles(unique);
-    if (unique.length < valid.length) showToast(`${valid.length - unique.length} arquivo(s) repetido(s) ignorado(s).`);
-  } catch (err) {
-    console.error(err);
-    unique.forEach(file => pendingFileKeys.delete(`${file.name}|${file.size}|${file.lastModified}|${file.type}`));
-    photoStatus.textContent = "Não foi possível processar uma das imagens.";
-    showToast("Falha ao preparar uma foto.", "error");
-  } finally { processingFiles = false; }
+  try { await prepareFiles(valid); }
+  catch (err) { console.error(err); photoStatus.textContent = "Não foi possível processar uma das imagens."; showToast("Falha ao preparar uma foto.", "error"); }
 }
 
 loginBtn.addEventListener("click", async () => {
@@ -438,13 +398,9 @@ photoDrop.addEventListener("drop", async e => { e.preventDefault(); photoDrop.cl
 form.addEventListener("input", () => { clearTimeout(draftTimer); draftTimer = setTimeout(saveDraft, 350); });
 
 form.addEventListener("submit", async event => {
-  event.preventDefault(); if (!currentUser || saveInProgress) return;
+  event.preventDefault(); if (!currentUser) return;
   const id = $("#itemId").value; const title = $("#title").value.trim();
   if (!title) { showToast("Dê um título para a gaveta.", "error"); return; }
-  saveInProgress = true;
-  const submitButton = form.querySelector('button[type="submit"]');
-  submitButton.disabled = true;
-  submitButton.textContent = "Guardando...";
   statusEl.textContent = "Guardando...";
   try {
     const itemId = id || push(itemsRef).key; const old = items[itemId] || {};
@@ -500,10 +456,6 @@ form.addEventListener("submit", async event => {
   } catch(error) {
     console.error(error); statusEl.textContent = `Não foi possível guardar: ${friendlyFirebaseError(error)}`;
     showToast("Não foi possível guardar a gaveta.", "error");
-  } finally {
-    saveInProgress = false;
-    submitButton.disabled = false;
-    submitButton.textContent = "Guardar";
   }
 });
 
