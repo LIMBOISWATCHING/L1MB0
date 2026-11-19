@@ -2,11 +2,11 @@
 // Fotos: redimensionadas/comprimidas no navegador e armazenadas como Base64 no RTDB.
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getDatabase, ref, push, set, remove, onValue } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+import { getDatabase, ref, push, set, update, remove, onValue } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBVKOtUqA0FxfE0a5jazGbcJb_H8R0nv3g",
+  apiKey: "AIzaSyBVKOtqA0FxfE0a5jazGbcJb_H8R0nv3g",
   authDomain: "banco-de-dados-geral-l1mb0.firebaseapp.com",
   databaseURL: "https://banco-de-dados-geral-l1mb0-default-rtdb.firebaseio.com",
   projectId: "banco-de-dados-geral-l1mb0",
@@ -66,6 +66,8 @@ let pendingPhotos = [];
 let editingRemovedPhotoIds = new Set();
 let toastTimer = null;
 let draftTimer = null;
+let isPreparingPhotos = false;
+let isSavingItem = false;
 
 function escapeHTML(value = "") {
   return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
@@ -131,13 +133,17 @@ function renderPhotoList(container, photos, item, label, editable = false, pendi
   container.classList.remove("hidden");
   container.innerHTML = `<small>${escapeHTML(label)}</small><div class="photo-grid">${photos.map((photo, index) => `
     <div class="photo-card" draggable="${pending ? "true" : "false"}" data-photo-id="${escapeHTML(photo.id || "")}">
-      <button type="button" class="photo-thumb" data-photo-index="${index}" aria-label="Ampliar foto ${index + 1}"><img src="${escapeHTML(photo.data)}" alt="Foto ${index + 1}"><span class="zoom-hint">Ampliar</span></button>
+      <button type="button" class="photo-thumb" data-photo-index="${index}" aria-label="Ampliar foto ${index + 1}"><img src="${escapeHTML(photo.thumb || photo.data)}" data-full-src="${escapeHTML(photo.data)}" alt="Foto ${index + 1}" loading="lazy" decoding="async"><span class="zoom-hint">Ampliar</span></button>
       <div class="photo-card-actions">
         <a class="secondary" href="${escapeHTML(photo.data)}" download="${escapeHTML(photoDownloadName(item, photo, index + 1))}">Baixar</a>
         ${editable && photo.id !== "legacy" ? `<button type="button" class="secondary remove-selected-photo" data-photo-id="${escapeHTML(photo.id)}">Remover</button>` : ""}
         ${pending ? `<span class="drag-hint">Arraste para reordenar</span>` : ""}
       </div>
     </div>`).join("")}</div>`;
+  container.querySelectorAll("img").forEach(img => img.addEventListener("error", () => {
+    const full = img.dataset.fullSrc;
+    if (full && img.src !== full) img.src = full;
+  }, { once: true }));
   container.querySelectorAll(".photo-thumb").forEach(btn => btn.addEventListener("click", () => openLightbox(photos, Number(btn.dataset.photoIndex))));
   if (pending) wirePhotoDrag(container);
 }
@@ -218,6 +224,7 @@ function openEdit(id) {
   resetPhotoUI();
   const existingPhotos = normalizePhotos(item);
   renderPhotoList(currentPhoto, existingPhotos, item, existingPhotos.length === 1 ? "Foto atual" : "Fotos atuais", true, false);
+  wireCurrentPhotoButtons(id);
   if (existingPhotos.length) removePhotoRow.classList.remove("hidden");
   dialog.showModal();
 }
@@ -228,6 +235,7 @@ function wireCurrentPhotoButtons(id) {
     editingRemovedPhotoIds.add(btn.dataset.photoId);
     const remaining = normalizePhotos(item).filter(photo => !editingRemovedPhotoIds.has(photo.id));
     renderPhotoList(currentPhoto, remaining, item, remaining.length === 1 ? "Foto atual" : "Fotos atuais", true, false);
+    wireCurrentPhotoButtons(id);
     removePhotoRow.classList.toggle("hidden", remaining.length === 0);
     showToast("Foto marcada para remoção. Ela será apagada ao guardar.");
   }));
@@ -266,7 +274,7 @@ function render() {
       <div class="drawer-preview">
         ${item.address ? `<div class="preview-address" title="Clique para copiar">⌖ <span class="copy-address" data-address="${escapeHTML(item.address)}">${escapeHTML(item.address)}</span></div>` : ""}
         ${item.text ? `<div>${escapeHTML(item.text)}</div>` : "<em>Nenhum texto nesta gaveta.</em>"}
-        ${photos.length ? `<div class="preview-photo-grid">${photos.map((photo,index) => `<div class="preview-photo"><button type="button" class="preview-photo-button" data-photo-index="${index}"><img class="preview-image" src="${escapeHTML(photo.data)}" alt="Foto ${index + 1}"><span class="zoom-hint">Ampliar</span></button><div class="preview-actions"><a class="secondary" href="${escapeHTML(photo.data)}" download="${escapeHTML(photoDownloadName(item, photo, index + 1))}">Baixar foto ${index + 1}</a></div></div>`).join("")}</div>` : ""}
+        ${photos.length ? `<div class="preview-photo-grid">${photos.map((photo,index) => `<div class="preview-photo"><button type="button" class="preview-photo-button" data-photo-index="${index}"><img class="preview-image" src="${escapeHTML(photo.thumb || photo.data)}" data-full-src="${escapeHTML(photo.data)}" alt="Foto ${index + 1}" loading="lazy" decoding="async"><span class="zoom-hint">Ampliar</span></button><div class="preview-actions"><a class="secondary" href="${escapeHTML(photo.data)}" download="${escapeHTML(photoDownloadName(item, photo, index + 1))}">Baixar foto ${index + 1}</a></div></div>`).join("")}</div>` : ""}
         <div class="preview-actions"><button class="secondary edit-item" type="button">Editar</button></div>
       </div>
     </article>`;
@@ -276,6 +284,21 @@ function render() {
   drawers.querySelectorAll(".preview-photo-button").forEach(btn => btn.addEventListener("click", () => {
     const item = items[btn.closest(".drawer").dataset.id]; openLightbox(normalizePhotos(item), Number(btn.dataset.photoIndex));
   }));
+  drawers.querySelectorAll("img.preview-image").forEach(img => {
+    img.addEventListener("error", () => {
+      const full = img.dataset.fullSrc;
+      if (full && img.src !== full) {
+        img.src = full;
+        img.dataset.fallbackUsed = "true";
+      }
+    }, { once: true });
+  });
+  drawers.querySelectorAll("img.preview-image").forEach(img => {
+    // Uma imagem quebrada não deve fazer a galeria inteira desaparecer.
+    if (!img.getAttribute("src")) {
+      img.src = img.dataset.fullSrc || "";
+    }
+  });
   drawers.querySelectorAll(".copy-address").forEach(el => el.addEventListener("click", async () => {
     try { await navigator.clipboard.writeText(el.dataset.address); const old = el.textContent; el.textContent = "Endereço copiado"; setTimeout(() => el.textContent = old, 1200); }
     catch { showToast("Não foi possível copiar o endereço automaticamente.", "error"); }
@@ -284,39 +307,77 @@ function render() {
 
 async function compressImage(file) {
   if (!file.type.startsWith("image/")) throw new Error("O arquivo escolhido não é uma imagem.");
-  let bitmap = await createImageBitmap(file);
+  const bitmap = await createImageBitmap(file);
   const maxDimension = 1400;
   const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
-  let width = Math.max(1, Math.round(bitmap.width * scale));
-  let height = Math.max(1, Math.round(bitmap.height * scale));
-  const canvas = document.createElement("canvas"); canvas.width = width; canvas.height = height;
-  const ctx = canvas.getContext("2d", {alpha:false}); ctx.drawImage(bitmap, 0, 0, width, height); bitmap.close();
-  let quality = 0.78; const maxBytes = 1.6 * 1024 * 1024;
+  const width = Math.max(1, Math.round(bitmap.width * scale));
+  const height = Math.max(1, Math.round(bitmap.height * scale));
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d", { alpha: false });
+  ctx.drawImage(bitmap, 0, 0, width, height);
+
+  let quality = 0.82;
   let data = canvas.toDataURL("image/jpeg", quality);
-  while (data.length * 0.75 > maxBytes && quality > 0.45) { quality -= 0.07; data = canvas.toDataURL("image/jpeg", quality); }
-  while (data.length * 0.75 > maxBytes && width > 700) {
-    width = Math.round(width * 0.82); height = Math.round(height * 0.82); canvas.width = width; canvas.height = height;
-    bitmap = await createImageBitmap(file); ctx.drawImage(bitmap, 0, 0, width, height); bitmap.close();
-    quality = Math.max(0.55, quality - 0.03); data = canvas.toDataURL("image/jpeg", quality);
+  while (data.length > 2_100_000 && quality > 0.55) {
+    quality = Math.max(0.55, quality - 0.03);
+    data = canvas.toDataURL("image/jpeg", quality);
   }
-  return { data, width, height, approxBytes: Math.round(data.length * 0.75) };
+
+  // Miniatura separada para a galeria: reduz bastante o trabalho de decodificação no celular.
+  const thumbMax = 480;
+  const thumbScale = Math.min(1, thumbMax / Math.max(width, height));
+  const thumbWidth = Math.max(1, Math.round(width * thumbScale));
+  const thumbHeight = Math.max(1, Math.round(height * thumbScale));
+  const thumbCanvas = document.createElement("canvas");
+  thumbCanvas.width = thumbWidth;
+  thumbCanvas.height = thumbHeight;
+  const thumbCtx = thumbCanvas.getContext("2d", { alpha: false });
+  thumbCtx.drawImage(canvas, 0, 0, thumbWidth, thumbHeight);
+  const thumb = thumbCanvas.toDataURL("image/jpeg", 0.68);
+
+  bitmap.close();
+  return { data, thumb, width, height, approxBytes: Math.round(data.length * 0.75) };
 }
 
 async function prepareFiles(files) {
+  if (isPreparingPhotos) return;
+  isPreparingPhotos = true;
+  photoInput.disabled = true;
+  photoDrop.classList.add("processing");
   photoStatus.textContent = `Preparando ${files.length} ${files.length === 1 ? "foto" : "fotos"}...`;
+  try {
   const results = [];
   for (let i = 0; i < files.length; i++) {
     photoStatus.textContent = `Reduzindo foto ${i + 1} de ${files.length}...`;
     const result = await compressImage(files[i]);
     results.push({ ...result, name: files[i].name, id: `new-${crypto.randomUUID ? crypto.randomUUID() : Date.now() + "-" + i}` });
   }
-  pendingPhotos.push(...results);
+  // Evita adicionar novamente a mesma imagem quando o usuário seleciona/solta
+  // o mesmo arquivo mais de uma vez durante a mesma edição.
+  const knownData = new Set(pendingPhotos.map(photo => photo.data));
+  const uniqueResults = results.filter(photo => {
+    if (knownData.has(photo.data)) return false;
+    knownData.add(photo.data);
+    return true;
+  });
+  pendingPhotos.push(...uniqueResults);
   renderPhotoList(selectedPhotos, pendingPhotos, { title: $("#title").value || "foto" }, "Fotos novas", false, true);
   const totalMB = pendingPhotos.reduce((sum,r) => sum + r.approxBytes, 0) / 1024 / 1024;
-  photoStatus.textContent = `${pendingPhotos.length} ${pendingPhotos.length === 1 ? "foto pronta" : "fotos prontas"} — aproximadamente ${totalMB.toFixed(2)} MB. Arraste para reordenar.`;
+  photoStatus.textContent = uniqueResults.length < results.length
+    ? `${uniqueResults.length} nova(s) adicionada(s); duplicatas ignoradas. Total: ${pendingPhotos.length} fotos — aproximadamente ${totalMB.toFixed(2)} MB.`
+    : `${pendingPhotos.length} ${pendingPhotos.length === 1 ? "foto pronta" : "fotos prontas"} — aproximadamente ${totalMB.toFixed(2)} MB. Arraste para reordenar.`;
+  } finally {
+    isPreparingPhotos = false;
+    photoInput.disabled = false;
+    photoDrop.classList.remove("processing");
+  }
 }
 
 async function handleFiles(files) {
+  if (isPreparingPhotos) return;
   const valid = files.filter(f => f.type.startsWith("image/"));
   if (!valid.length) { photoStatus.textContent = "Escolha arquivos de imagem."; return; }
   try { await prepareFiles(valid); }
@@ -362,31 +423,71 @@ photoDrop.addEventListener("drop", async e => { e.preventDefault(); photoDrop.cl
 form.addEventListener("input", () => { clearTimeout(draftTimer); draftTimer = setTimeout(saveDraft, 350); });
 
 form.addEventListener("submit", async event => {
-  event.preventDefault(); if (!currentUser) return;
+  event.preventDefault();
+  if (!currentUser || isSavingItem || isPreparingPhotos) return;
   const id = $("#itemId").value; const title = $("#title").value.trim();
   if (!title) { showToast("Dê um título para a gaveta.", "error"); return; }
+  isSavingItem = true;
+  const submitButton = form.querySelector('[type="submit"]');
+  if (submitButton) submitButton.disabled = true;
   statusEl.textContent = "Guardando...";
   try {
     const itemId = id || push(itemsRef).key; const old = items[itemId] || {};
-    let photos = old.photos && typeof old.photos === "object" ? { ...old.photos } : {};
-    if (!Object.keys(photos).length && old.photoData) photos.legacy = { data: old.photoData, name: `${title}.jpg` };
-    if (removePhoto.checked) photos = {};
-    for (const removedId of editingRemovedPhotoIds) delete photos[removedId];
-    for (const photo of pendingPhotos) {
-      const photoId = push(ref(db, `gaveta/items/${itemId}/photos`)).key;
-      photos[photoId] = { data: photo.data, name: photo.name, width: photo.width, height: photo.height, approxBytes: photo.approxBytes };
+    const basePath = `gaveta/items/${itemId}`;
+    const updates = {};
+    const now = Date.now();
+
+    // IMPORTANTE: não substituímos mais a gaveta inteira ao editar.
+    // Antes, `set(item)` reenviava tudo e, em algumas situações de celular,
+    // um snapshot antigo podia fazer as fotos existentes serem sobrescritas.
+    // Agora enviamos somente os campos alterados e as fotos novas/removidas.
+    updates[`${basePath}/title`] = title;
+    updates[`${basePath}/address`] = $("#address").value.trim();
+    updates[`${basePath}/text`] = $("#text").value.trim();
+    updates[`${basePath}/type`] = typeInput.value;
+    updates[`${basePath}/tags`] = tagsInput.value.split(",").map(x => x.trim()).filter(Boolean);
+    updates[`${basePath}/favorite`] = favoriteInput.checked;
+    updates[`${basePath}/createdAt`] = old.createdAt || now;
+    updates[`${basePath}/updatedAt`] = now;
+    updates[`${basePath}/updatedBy`] = currentUser.uid;
+
+    // Dados antigos com photoData são migrados sem perder a foto.
+    if (!old.photos && old.photoData && !removePhoto.checked) {
+      updates[`${basePath}/photos/legacy`] = { data: old.photoData, name: `${title}.jpg` };
+      updates[`${basePath}/photoData`] = null;
     }
-    const data = {
-      title, address: $("#address").value.trim(), text: $("#text").value.trim(), type: typeInput.value,
-      tags: tagsInput.value.split(",").map(x => x.trim()).filter(Boolean), favorite: favoriteInput.checked,
-      createdAt: old.createdAt || Date.now(), updatedAt: Date.now(), updatedBy: currentUser.uid
-    };
-    if (Object.keys(photos).length) data.photos = photos;
-    await set(ref(db, `gaveta/items/${itemId}`), data);
+
+    // Remoção explícita das fotos antigas.
+    if (removePhoto.checked) {
+      updates[`${basePath}/photos`] = null;
+      updates[`${basePath}/photoData`] = null;
+    } else {
+      for (const removedId of editingRemovedPhotoIds) {
+        updates[`${basePath}/photos/${removedId}`] = null;
+      }
+    }
+
+    // Cada foto nova é adicionada ao seu próprio caminho.
+    for (const photo of pendingPhotos) {
+      const photoId = push(ref(db, `${basePath}/photos`)).key;
+      updates[`${basePath}/photos/${photoId}`] = {
+        data: photo.data,
+        thumb: photo.thumb,
+        name: photo.name,
+        width: photo.width,
+        height: photo.height,
+        approxBytes: photo.approxBytes
+      };
+    }
+
+    await update(ref(db), updates);
     clearDraft(); dialog.close(); showToast(id ? "Gaveta atualizada." : "Gaveta guardada.");
   } catch(error) {
     console.error(error); statusEl.textContent = `Não foi possível guardar: ${friendlyFirebaseError(error)}`;
     showToast("Não foi possível guardar a gaveta.", "error");
+  } finally {
+    isSavingItem = false;
+    if (submitButton) submitButton.disabled = false;
   }
 });
 
