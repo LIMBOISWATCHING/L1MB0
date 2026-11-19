@@ -75,7 +75,7 @@ function escapeHTML(value = "") {
 
 function normalizePhotos(item) {
   if (item?.photos && typeof item.photos === "object") {
-    return Object.entries(item.photos).map(([id, photo]) => ({ ...photo, id }));
+    return Object.entries(item.photos).map(([id, photo]) => ({ id, ...photo }));
   }
   if (item?.photoData) return [{ id: "legacy", data: item.photoData, name: `${item.title || "foto"}.jpg` }];
   return [];
@@ -136,7 +136,7 @@ function renderPhotoList(container, photos, item, label, editable = false, pendi
       <button type="button" class="photo-thumb" data-photo-index="${index}" aria-label="Ampliar foto ${index + 1}"><img src="${escapeHTML(photo.thumb || photo.data)}" data-full-src="${escapeHTML(photo.data)}" alt="Foto ${index + 1}" loading="lazy" decoding="async"><span class="zoom-hint">Ampliar</span></button>
       <div class="photo-card-actions">
         <a class="secondary" href="${escapeHTML(photo.data)}" download="${escapeHTML(photoDownloadName(item, photo, index + 1))}">Baixar</a>
-        ${editable ? `<button type="button" class="secondary remove-selected-photo" data-photo-id="${escapeHTML(photo.id)}">Remover</button>` : ""}
+        ${editable && photo.id !== "legacy" ? `<button type="button" class="secondary remove-selected-photo" data-photo-id="${escapeHTML(photo.id)}">Remover</button>` : ""}
         ${pending ? `<span class="drag-hint">Arraste para reordenar</span>` : ""}
       </div>
     </div>`).join("")}</div>`;
@@ -452,9 +452,7 @@ form.addEventListener("submit", async event => {
     updates[`${basePath}/updatedBy`] = currentUser.uid;
 
     // Dados antigos com photoData são migrados sem perder a foto.
-    // Se a foto legada foi marcada para remoção, não a migramos novamente.
-    const removingLegacyPhoto = editingRemovedPhotoIds.has("legacy");
-    if (!old.photos && old.photoData && !removePhoto.checked && !removingLegacyPhoto) {
+    if (!old.photos && old.photoData && !removePhoto.checked) {
       updates[`${basePath}/photos/legacy`] = { data: old.photoData, name: `${title}.jpg` };
       updates[`${basePath}/photoData`] = null;
     }
@@ -465,12 +463,7 @@ form.addEventListener("submit", async event => {
       updates[`${basePath}/photoData`] = null;
     } else {
       for (const removedId of editingRemovedPhotoIds) {
-        // A foto antiga pode estar diretamente em photoData ou já migrada
-        // para photos/legacy. Limpamos os dois caminhos sem tocar nas demais.
         updates[`${basePath}/photos/${removedId}`] = null;
-        if (removedId === "legacy") {
-          updates[`${basePath}/photoData`] = null;
-        }
       }
     }
 
