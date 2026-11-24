@@ -918,7 +918,7 @@ label input:focus, label textarea:focus, label select:focus { border-color: #5d7
     word-break: break-word;
   }
   .drawer-meta {
-    color: #4a4036 !important;
+    color: #f2f2f2 !important;
     text-shadow: none !important;
     font-size: 12px;
     font-weight: 500;
