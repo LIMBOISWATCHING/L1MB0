@@ -727,7 +727,7 @@ label input:focus, label textarea:focus, label select:focus { border-color: #5d7
 :root {
   --text-on-wood: #fff5e5;
   --muted-on-wood: #e5d5bd;
-  --paper-text: #241d17;
+  --paper-text: #f2f2f2;
 }
 .drawer-title { color: var(--text-on-wood); text-shadow: 0 1px 1px rgba(0,0,0,.45); }
 .drawer-meta { color: var(--muted-on-wood); text-shadow: 0 1px 1px rgba(0,0,0,.4); }
