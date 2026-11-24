@@ -750,7 +750,7 @@ label input:focus, label textarea:focus, label select:focus { border-color: #5d7
   .cabinet-label { color: #4b3a2b; padding: 8px 2px 12px; font-weight: 700; }
   .toolbar { border-bottom: 1px solid #cdbfae; padding: 4px 0 14px; }
   .toolbar label { color: #4b3a2b; font-weight: 700; }
-  .toolbar select { background: #fffaf2; border-color: #a99986; color: #211b16; }
+  .toolbar select { background: #fffaf2; border-color: #a99986; color: #f2f2f2; }
   .toolbar .filter-check { color: #3f3125; }
   .drawers { gap: 10px; padding-top: 14px; }
   .drawer {
